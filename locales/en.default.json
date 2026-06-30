@@ -163,6 +163,11 @@
         "sale_price": "Sale price",
         "unit_price": "Unit price"
       },
+      "buybox": {
+        "mwst_label": "incl. VAT",
+        "add_to_cart_label": "Add to cart",
+        "availability_label": "In stock! Ships in approx. 2-4 business days"
+      },
       "selling_plans": {
         "one_time_purchase": "One-time Purchase"
       },
