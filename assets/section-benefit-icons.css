@@ -1,5 +1,6 @@
 .benefit-icons {
   background-color: #edf2e7;
+  letter-spacing: 0;
 }
 
 .benefit-icons__inner {
@@ -60,4 +61,19 @@
   font-size: 12px;
   line-height: 1.3;
   color: rgba(var(--color-foreground), 0.6);
+}
+
+@media screen and (max-width: 989px) {
+  .benefit-icons__inner {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .benefit-icons__label {
+    font-size: 14px;
+  }
+
+  .benefit-icons__desc {
+    font-size: 10px;
+  }
 }
