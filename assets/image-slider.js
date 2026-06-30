@@ -7,10 +7,10 @@
 class ImageSlider extends HTMLElement {
   constructor() {
     super();
-    this.track = this.querySelector('.image-slider__track');
-    this.slides = Array.from(this.querySelectorAll('.image-slider__slide'));
-    this.thumbs = Array.from(this.querySelectorAll('.image-slider__thumb'));
-    this.zoomLinks = Array.from(this.querySelectorAll('.image-slider__zoom'));
+    this.track = this.querySelector(".image-slider__track");
+    this.slides = Array.from(this.querySelectorAll(".image-slider__slide"));
+    this.thumbs = Array.from(this.querySelectorAll(".image-slider__thumb"));
+    this.zoomLinks = Array.from(this.querySelectorAll(".image-slider__zoom"));
     this.currentIndex = 0;
     this.lightbox = null;
   }
@@ -19,17 +19,19 @@ class ImageSlider extends HTMLElement {
     if (!this.track || this.slides.length === 0) return;
 
     this.thumbs.forEach((thumb) => {
-      thumb.addEventListener('click', () => this.goTo(Number(thumb.dataset.index)));
+      thumb.addEventListener("click", () =>
+        this.goTo(Number(thumb.dataset.index)),
+      );
     });
 
-    this.querySelectorAll('[data-dir]').forEach((button) => {
-      button.addEventListener('click', () => {
-        this.step(button.dataset.dir === 'next' ? 1 : -1);
+    this.querySelectorAll("[data-dir]").forEach((button) => {
+      button.addEventListener("click", () => {
+        this.step(button.dataset.dir === "next" ? 1 : -1);
       });
     });
 
     this.zoomLinks.forEach((link) => {
-      link.addEventListener('click', (event) => {
+      link.addEventListener("click", (event) => {
         event.preventDefault();
         this.openLightbox(Number(link.dataset.index));
       });
@@ -46,7 +48,7 @@ class ImageSlider extends HTMLElement {
   }
 
   observeSlides() {
-    if (!('IntersectionObserver' in window)) return;
+    if (!("IntersectionObserver" in window)) return;
 
     this.observer = new IntersectionObserver(
       (entries) => {
@@ -56,7 +58,7 @@ class ImageSlider extends HTMLElement {
           if (index !== -1) this.setActive(index);
         });
       },
-      { root: this.track, threshold: [0.6] }
+      { root: this.track, threshold: [0.6] },
     );
 
     this.slides.forEach((slide) => this.observer.observe(slide));
@@ -66,37 +68,46 @@ class ImageSlider extends HTMLElement {
     this.currentIndex = index;
     this.thumbs.forEach((thumb, i) => {
       const isActive = i === index;
-      thumb.classList.toggle('is-active', isActive);
+      thumb.classList.toggle("is-active", isActive);
       if (isActive) {
-        thumb.setAttribute('aria-current', 'true');
+        thumb.setAttribute("aria-current", "true");
       } else {
-        thumb.removeAttribute('aria-current');
+        thumb.removeAttribute("aria-current");
       }
     });
     this.updateArrows();
   }
 
   updateArrows() {
-    const prevBtn = this.querySelector('.image-slider__arrow--prev');
-    const nextBtn = this.querySelector('.image-slider__arrow--next');
-    if (prevBtn) prevBtn.style.opacity = this.currentIndex === 0 ? '0.3' : '1';
-    if (nextBtn) nextBtn.style.opacity = this.currentIndex === this.slides.length - 1 ? '0.3' : '1';
+    const prevBtn = this.querySelector(".image-slider__arrow--prev");
+    const nextBtn = this.querySelector(".image-slider__arrow--next");
+    if (prevBtn) prevBtn.style.opacity = this.currentIndex === 0 ? "0.3" : "1";
+    if (nextBtn)
+      nextBtn.style.opacity =
+        this.currentIndex === this.slides.length - 1 ? "0.3" : "1";
   }
 
   goTo(index) {
     const slide = this.slides[index];
     if (!slide) return;
-    slide.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    slide.scrollIntoView({
+      behavior: "smooth",
+      inline: "start",
+      block: "nearest",
+    });
     this.setActive(index);
   }
 
   step(delta) {
-    const next = Math.min(Math.max(this.currentIndex + delta, 0), this.slides.length - 1);
+    const next = Math.min(
+      Math.max(this.currentIndex + delta, 0),
+      this.slides.length - 1,
+    );
     this.goTo(next);
   }
 
   warmLightbox() {
-    if (!this.dataset.pswpUrl || !('requestIdleCallback' in window)) return;
+    if (!this.dataset.pswpUrl || !("requestIdleCallback" in window)) return;
     requestIdleCallback(() => {
       import(this.dataset.pswpUrl).catch(() => {});
     });
@@ -107,17 +118,20 @@ class ImageSlider extends HTMLElement {
       src: link.href,
       width: Number(link.dataset.pswpWidth) || 0,
       height: Number(link.dataset.pswpHeight) || 0,
-      alt: link.querySelector('img')?.alt || '',
+      alt: link.querySelector("img")?.alt || "",
     }));
   }
 
   async openLightbox(index) {
     if (!this.lightbox) {
       this.loadStyles();
-      const { default: PhotoSwipeLightbox } = await import(this.dataset.pswpUrl);
+      const { default: PhotoSwipeLightbox } = await import(
+        this.dataset.pswpUrl
+      );
       this.lightbox = new PhotoSwipeLightbox({
         dataSource: this.buildDataSource(),
         pswpModule: () => import(this.dataset.pswpCoreUrl),
+        bgOpacity: 0.9,
       });
       this.lightbox.init();
     }
@@ -125,15 +139,16 @@ class ImageSlider extends HTMLElement {
   }
 
   loadStyles() {
-    if (!this.dataset.pswpCss || document.querySelector('link[data-pswp-css]')) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
+    if (!this.dataset.pswpCss || document.querySelector("link[data-pswp-css]"))
+      return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
     link.href = this.dataset.pswpCss;
-    link.setAttribute('data-pswp-css', '');
+    link.setAttribute("data-pswp-css", "");
     document.head.appendChild(link);
   }
 }
 
-if (!customElements.get('image-slider')) {
-  customElements.define('image-slider', ImageSlider);
+if (!customElements.get("image-slider")) {
+  customElements.define("image-slider", ImageSlider);
 }
