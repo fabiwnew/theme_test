@@ -1,10 +1,14 @@
+.buy-box {
+  letter-spacing: 0;
+}
+
 .buy-box__inner {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 48px;
+  gap: 3rem;
   align-items: start;
-  padding-left: 80px;
-  padding-right: 80px;
+  padding-left: 5rem;
+  padding-right: 5rem;
   max-width: 1440px;
   margin-left: auto;
   margin-right: auto;
@@ -12,8 +16,7 @@
 
 @media screen and (min-width: 990px) {
   .buy-box__inner {
-    grid-template-columns: auto 1fr;
-    gap: 48px;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -28,7 +31,7 @@
 @media screen and (min-width: 990px) {
   .image-slider {
     display: grid;
-    grid-template-columns: 72px 1fr;
+    grid-template-columns: auto 1fr;
     gap: 1rem;
     align-items: start;
   }
@@ -36,13 +39,17 @@
   .image-slider__stage {
     grid-column: 2;
     grid-row: 1;
-    width: 550px;
+    min-width: 0;
   }
 
   .image-slider__thumbs {
     grid-column: 1;
     grid-row: 1;
     flex-direction: column;
+  }
+
+  .image-slider__nav {
+    display: flex;
   }
 }
 
@@ -85,26 +92,12 @@
   border-radius: 8px;
 }
 
-@media screen and (min-width: 990px) {
-  .image-slider__image {
-    width: 550px;
-    height: 550px;
-    aspect-ratio: auto;
-  }
-}
-
 /* Arrows --------------------------------------------------- */
 .image-slider__nav {
   display: none;
   justify-content: center;
   gap: 2rem;
   margin-top: 0.75rem;
-}
-
-@media screen and (min-width: 990px) {
-  .image-slider__nav {
-    display: flex;
-  }
 }
 
 .image-slider__arrow {
@@ -160,19 +153,23 @@
   opacity: 0.6;
   transition:
     border-color 0.15s ease,
-    opacity 0.15s ease;
+    opacity 0.3s ease;
 }
 
-@media screen and (min-width: 990px) {
-  .image-slider__thumb {
-    width: 64px;
-    height: 64px;
-  }
+.image-slider__thumb:hover {
+  opacity: 1;
 }
 
 .image-slider__thumb.is-active {
   border-color: rgb(var(--color-foreground));
   opacity: 1;
+}
+
+@media screen and (max-width: 1199px) {
+  .image-slider__thumb {
+    width: 52px;
+    height: 52px;
+  }
 }
 
 .image-slider__thumb-image {
@@ -189,7 +186,7 @@
 }
 
 .buy-box__title {
-  margin: 0 0 4px;
+  margin: 0 0 0.25rem;
   font-size: 40px;
   font-weight: 700;
   line-height: 1.15;
@@ -197,7 +194,7 @@
 }
 
 .buy-box__subtitle {
-  margin: 0 0 24px;
+  margin: 0 0 1.5rem;
   font-size: 18px;
   color: #8e8983;
 }
@@ -206,8 +203,8 @@
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 24px;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .buy-box__compare {
@@ -235,8 +232,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0 0 16px;
+  margin: 0 0 1rem;
   font-size: 14px;
+  font-weight: 500;
   color: #4e724b;
 }
 
@@ -254,12 +252,13 @@
   justify-content: center;
   gap: 1rem;
   width: 100%;
-  padding: 1.5rem 0;
+  padding: 2rem 0;
   font-size: 18px;
   font-weight: 700;
   background-color: #4e724b;
   color: #ffffff;
   border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .buy-box__atc:hover {
@@ -272,11 +271,108 @@
   height: 20px;
 }
 
-.buy-box__form-wrapper {
-  display: block;
-}
-
 .product-form__error-message-wrapper {
   margin-bottom: 1rem;
   color: rgb(var(--color-foreground));
+}
+
+/* PhotoSwipe lightbox background ----------------------------- */
+/*
+  Dawn's base.css has `div:empty { display: none }` which hides the
+  empty .pswp__bg element entirely. We override display and ensure the
+  background colour is black. PhotoSwipe's own JS (bgOpacity: 0.65)
+  then handles the open/close opacity animation.
+*/
+.pswp__bg {
+  display: block !important;
+  background: #000 !important;
+}
+
+/* 990–1199px — gallery 60 % / info 40 % ------------------- */
+@media screen and (min-width: 990px) and (max-width: 1199px) {
+  .buy-box__inner {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+/* ≤1200px — typography, thumbnail scale-down & spacing ---- */
+@media screen and (max-width: 1199px) {
+  .buy-box__title {
+    font-size: 32px;
+  }
+
+  .buy-box__subtitle {
+    font-size: 16px;
+    margin-bottom: 1rem;
+  }
+
+  .buy-box__price {
+    font-size: 30px;
+  }
+
+  .buy-box__compare {
+    font-size: 18px;
+  }
+
+  .buy-box__pricing {
+    margin-bottom: 1rem;
+  }
+
+  .buy-box__info {
+    padding-top: 0.5rem;
+  }
+}
+
+/* ≤989px — mobile layout adjustments ---------------------- */
+@media screen and (max-width: 989px) {
+  .buy-box__inner {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: 1rem;
+  }
+
+  .buy-box__info {
+    padding-top: 0;
+  }
+}
+
+/* 750–989px, non-touch — cap gallery width ---------------- */
+/* On mouse/trackpad devices the gallery doesn't need to be full-bleed,
+   so we cap it at 600px left-aligned to avoid oversized square images. */
+@media screen and (min-width: 750px) and (max-width: 989px) and (pointer: fine) {
+  .image-slider {
+    max-width: 600px;
+  }
+}
+
+/* ≤989px, touch — swipe peek effect ----------------------- */
+/*
+  Applies to all touch devices (phones + tablets) up to the desktop
+  breakpoint. pointer: coarse = touch input (finger), not mouse.
+
+  Stage bleeds full-width via -1rem negative margin.
+  Track: padding 1rem on both sides + gap 4px between slides.
+  100% = viewport − 2rem (both paddings reduce flex content width).
+  Slide = 100% → peek = padding_right − gap = 1rem − 4px = 12px.
+  First slide: 1rem empty left, 12px peek right.
+  Last slide:  12px peek left, 1rem empty right.
+  Intermediate: 12px peek on both sides.
+*/
+@media screen and (max-width: 989px) and (pointer: coarse) {
+  .image-slider__stage {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+
+  .image-slider__track {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: 4px;
+    scroll-padding-left: 1rem;
+    border-radius: 0;
+  }
+
+  .image-slider__slide {
+    flex: 0 0 100%;
+  }
 }
