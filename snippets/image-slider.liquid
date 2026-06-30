@@ -1,0 +1,117 @@
+{% comment %}
+  Renders the product image gallery as an <image-slider> web component.
+
+  - Inline slider via native CSS scroll-snap (swipe on mobile, arrows/thumbs on desktop)
+  - Lightbox zoom via PhotoSwipe, loaded lazily through data-attribute URLs
+
+  Accepts:
+  - product: {Object} Product object (defaults to the current product)
+
+  Usage:
+  {% render 'image-slider', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign gallery_product = product | default: product
+  assign media_items = gallery_product.media
+-%}
+
+{%- if media_items.size > 0 -%}
+  <image-slider
+    class="image-slider"
+    data-pswp-url="{{ 'photoswipe-lightbox.esm.js' | asset_url }}"
+    data-pswp-core-url="{{ 'photoswipe.esm.js' | asset_url }}"
+    data-pswp-css="{{ 'photoswipe.css' | asset_url }}"
+  >
+    <div class="image-slider__stage">
+      <div class="image-slider__track" role="list">
+        {%- for media in media_items -%}
+          {%- liquid
+            assign zoom_width = 2048
+            if media.width < zoom_width
+              assign zoom_width = media.width
+            endif
+            assign aspect = media.aspect_ratio | default: 1.0
+            assign zoom_height = zoom_width | times: 1.0 | divided_by: aspect | round
+
+            assign img_loading = 'lazy'
+            assign img_priority = 'auto'
+            if forloop.first
+              assign img_loading = 'eager'
+              assign img_priority = 'high'
+            endif
+          -%}
+          <div class="image-slider__slide" role="listitem" data-index="{{ forloop.index0 }}">
+            <a
+              class="image-slider__zoom"
+              href="{{ media | image_url: width: zoom_width }}"
+              data-index="{{ forloop.index0 }}"
+              data-pswp-width="{{ zoom_width }}"
+              data-pswp-height="{{ zoom_height }}"
+            >
+              {{
+                media.preview_image
+                | image_url: width: 1500
+                | image_tag:
+                  loading: img_loading,
+                  fetchpriority: img_priority,
+                  sizes: '(min-width: 990px) 45vw, 100vw',
+                  widths: '300, 450, 600, 750, 900, 1200, 1500',
+                  class: 'image-slider__image',
+                  alt: media.alt
+              }}
+            </a>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if media_items.size > 1 -%}
+        <div class="image-slider__nav">
+          <button
+            type="button"
+            class="image-slider__arrow image-slider__arrow--prev"
+            data-dir="prev"
+            aria-label="{{ 'general.slider.previous_slide' | t | default: 'Previous image' }}"
+          >
+            {%- render 'icon-caret' -%}
+          </button>
+          <button
+            type="button"
+            class="image-slider__arrow image-slider__arrow--next"
+            data-dir="next"
+            aria-label="{{ 'general.slider.next_slide' | t | default: 'Next image' }}"
+          >
+            {%- render 'icon-caret' -%}
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if media_items.size > 1 -%}
+      <div class="image-slider__thumbs" role="list">
+        {%- for media in media_items -%}
+          <button
+            type="button"
+            class="image-slider__thumb{% if forloop.first %} is-active{% endif %}"
+            role="listitem"
+            data-index="{{ forloop.index0 }}"
+            aria-label="{{ 'products.product.media.image_available' | t: index: forloop.index | default: 'Show image' }}"
+            {% if forloop.first %}aria-current="true"{% endif %}
+          >
+            {{
+              media.preview_image
+              | image_url: width: 200
+              | image_tag:
+                loading: 'lazy',
+                widths: '80, 120, 200',
+                class: 'image-slider__thumb-image',
+                alt: media.alt
+            }}
+          </button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </image-slider>
+
+  <script src="{{ 'image-slider.js' | asset_url }}" type="module"></script>
+{%- endif -%}
