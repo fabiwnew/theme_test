@@ -135,6 +135,11 @@
         "sale_price": "Verkaufspreis",
         "unit_price": "Grundpreis"
       },
+      "buybox": {
+        "mwst_label": "inkl. MwSt.",
+        "add_to_cart_label": "In den Warenkorb",
+        "availability_label": "Auf Lager! Versand in ca. 2-4 Werktagen"
+      },
       "share": "Dieses Produkt teilen",
       "sold_out": "Ausverkauft",
       "unavailable": "Nicht verfügbar",

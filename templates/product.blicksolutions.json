@@ -1,0 +1,58 @@
+{
+  "sections": {
+    "buy-box": {
+      "type": "buy-box",
+      "settings": {
+        "color_scheme": "background-1",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "benefit-icons": {
+      "type": "benefit-icons",
+      "blocks": {
+        "benefit-1": {
+          "type": "benefit",
+          "settings": { "icon": "shield", "title": "Omega-Schutz" }
+        },
+        "benefit-2": {
+          "type": "benefit",
+          "settings": { "icon": "flask", "title": "Laborzertifiziert" }
+        },
+        "benefit-3": {
+          "type": "benefit",
+          "settings": { "icon": "microscope", "title": "Gentechnikfrei" }
+        },
+        "benefit-4": {
+          "type": "benefit",
+          "settings": { "icon": "leaf", "title": "Vegan" }
+        },
+        "benefit-5": {
+          "type": "benefit",
+          "settings": { "icon": "drop", "title": "Omega-3-reich" }
+        },
+        "benefit-6": {
+          "type": "benefit",
+          "settings": {
+            "icon": "germany-silhouette",
+            "title": "Herstellung in Deutschland"
+          }
+        }
+      },
+      "block_order": [
+        "benefit-1",
+        "benefit-2",
+        "benefit-3",
+        "benefit-4",
+        "benefit-5",
+        "benefit-6"
+      ],
+      "settings": {
+        "color_scheme": "background-2",
+        "padding_top": 24,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": ["buy-box", "benefit-icons"]
+}

@@ -1,0 +1,387 @@
+.buy-box {
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.buy-box__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  align-items: start;
+  padding-left: 5rem;
+  padding-right: 5rem;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (min-width: 990px) {
+  .buy-box__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Gallery -------------------------------------------------- */
+.image-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+@media screen and (min-width: 990px) {
+  .image-slider {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .image-slider__stage {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .image-slider__thumbs {
+    grid-column: 1;
+    grid-row: 1;
+    flex-direction: column;
+  }
+}
+
+.image-slider__stage {
+  position: relative;
+  min-width: 0;
+}
+
+.image-slider__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  border-radius: 8px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.image-slider__track::-webkit-scrollbar {
+  display: none;
+}
+
+.image-slider__slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+.image-slider__zoom {
+  display: block;
+  cursor: zoom-in;
+}
+
+.image-slider__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Arrows --------------------------------------------------- */
+.image-slider__nav {
+  display: none;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 0.75rem;
+}
+
+@media screen and (min-width: 990px) {
+  .image-slider__nav {
+    display: flex;
+  }
+}
+
+.image-slider__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.image-slider__arrow svg {
+  width: 22px;
+  height: 22px;
+}
+
+.image-slider__arrow--prev svg {
+  transform: rotate(90deg);
+}
+
+.image-slider__arrow--next svg {
+  transform: rotate(-90deg);
+}
+
+/* Thumbnails ----------------------------------------------- */
+.image-slider__thumbs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.image-slider__thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.image-slider__thumb {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .image-slider__thumb:hover {
+    opacity: 1;
+  }
+}
+
+.image-slider__thumb.is-active {
+  opacity: 1;
+}
+
+@media screen and (max-width: 1199px) {
+  .image-slider__thumb {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+.image-slider__thumb-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Buy box info --------------------------------------------- */
+.buy-box__info {
+  min-width: 0;
+  padding-top: 1.5rem;
+}
+
+.buy-box__title {
+  margin: 0 0 0.5rem;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #3d3b36;
+}
+
+.buy-box__subtitle {
+  margin: 0 0 2.5rem;
+  font-size: 18px;
+  color: #8e8983;
+}
+
+.buy-box__pricing {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.buy-box__prices {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.buy-box__compare {
+  font-size: 20px;
+  color: #8e8983;
+  text-decoration: line-through;
+}
+
+.buy-box__price {
+  font-size: 32px;
+  font-weight: 700;
+  color: #4e724b;
+}
+
+.buy-box__tax {
+  font-size: 12px;
+  color: #8e8983;
+}
+
+.buy-box__availability {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.5rem;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4e724b;
+}
+
+.buy-box__availability-dot {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #4e724b;
+}
+
+.buy-box__atc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.5rem 0;
+  font-size: 18px;
+  font-weight: 700;
+  background-color: #4e724b;
+  color: #ffffff;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.buy-box__atc:hover {
+  background-color: #3d5a3a;
+  color: #ffffff;
+}
+
+.buy-box__atc svg {
+  width: 20px;
+  height: 20px;
+}
+
+.product-form__error-message-wrapper {
+  margin-bottom: 1rem;
+  color: rgb(var(--color-foreground));
+}
+
+/* PhotoSwipe lightbox background ----------------------------- */
+/*
+  Dawn's base.css has `div:empty { display: none }` which hides the
+  empty .pswp__bg element entirely. We override display and ensure the
+  background colour is black. PhotoSwipe's own JS (bgOpacity: 0.9)
+  then handles the open/close opacity animation.
+*/
+.pswp__bg {
+  display: block !important;
+  background: #000 !important;
+}
+
+/* 990–1199px — gallery 60 % / info 40 % ------------------- */
+@media screen and (min-width: 990px) and (max-width: 1199px) {
+  .buy-box__inner {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+/* ≤1200px — typography, thumbnail scale-down & spacing ---- */
+@media screen and (max-width: 1199px) {
+  .buy-box__title {
+    font-size: 32px;
+  }
+
+  .buy-box__subtitle {
+    font-size: 16px;
+  }
+
+  .buy-box__price {
+    font-size: 30px;
+  }
+
+  .buy-box__compare {
+    font-size: 18px;
+  }
+
+  .buy-box__info {
+    padding-top: 0.5rem;
+  }
+}
+
+/* ≤989px — mobile layout adjustments ---------------------- */
+@media screen and (max-width: 989px) {
+  .buy-box__inner {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: 3rem;
+  }
+
+  .buy-box__info {
+    padding-top: 0;
+  }
+
+  .buy-box__pricing {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ≤749px, touch — swipe peek effect ----------------------- */
+/*
+  Applies to touch phones up to 749px. pointer: coarse = touch input.
+
+  Stage bleeds full-width via -1rem negative margin.
+  Track: padding 1rem on both sides + gap 4px between slides.
+  100% = viewport − 2rem (both paddings reduce flex content width).
+  Slide = 100% → peek = padding_right − gap = 1rem − 4px = 12px.
+  First slide: 1rem empty left, 12px peek right.
+  Last slide:  12px peek left, 1rem empty right.
+  Intermediate: 12px peek on both sides.
+*/
+@media screen and (max-width: 749px) and (pointer: coarse) {
+  .image-slider__stage {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+
+  .image-slider__track {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: 4px;
+    scroll-padding-left: 1rem;
+    border-radius: 0;
+  }
+
+  .image-slider__slide {
+    flex: 0 0 100%;
+  }
+}
+
+/* 750–989px — two slides visible -------------------------- */
+/*
+  All devices show 2 slides simultaneously.
+  gap: 0.5rem on the track; each slide = calc(50% - 0.25rem) so that
+  2 slides + 1 gap = 100%: 2×(50% − 0.25rem) + 0.5rem = 100%.
+*/
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .image-slider__track {
+    gap: 0.5rem;
+  }
+
+  .image-slider__slide {
+    flex: 0 0 calc(50% - 0.25rem);
+  }
+}
