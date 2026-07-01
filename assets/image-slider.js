@@ -14,7 +14,7 @@ class ImageSlider extends HTMLElement {
     this.thumbs = Array.from(this.querySelectorAll(".image-slider__thumb"));
     this.zoomLinks = Array.from(this.querySelectorAll(".image-slider__zoom"));
     this.currentIndex = 0;
-    this.observer = null;
+    this._pendingIndex = null;
     this.lightbox = null;
     this._lightboxReady = null;
     this._boundListeners = [];
@@ -46,9 +46,9 @@ class ImageSlider extends HTMLElement {
       this._boundListeners.push({ el: link, type: "click", handler });
     });
 
-    this.observeSlides();
+    this.attachScrollSync();
     this.warmLightbox();
-    this.updateArrows();
+    this.setActive(0);
   }
 
   disconnectedCallback() {
@@ -56,7 +56,6 @@ class ImageSlider extends HTMLElement {
       el.removeEventListener(type, handler),
     );
     this._boundListeners = [];
-    if (this.observer) this.observer.disconnect();
     if (this.lightbox) {
       this.lightbox.destroy();
       this.lightbox = null;
@@ -66,21 +65,34 @@ class ImageSlider extends HTMLElement {
 
   // ─── Initialisierung ────────────────────────────────────────────────────────
 
-  observeSlides() {
-    if (!("IntersectionObserver" in window)) return;
+  attachScrollSync() {
+    const handler = () => {
+      const leftmost = this._leftmostIndex();
+      if (this._pendingIndex !== null && this._pendingIndex >= leftmost) {
+        const i = this._pendingIndex;
+        this._pendingIndex = null;
+        this.setActive(i);
+        return;
+      }
+      this._pendingIndex = null;
+      this.setActive(leftmost);
+    };
+    this.track.addEventListener("scrollend", handler, { passive: true });
+    this._boundListeners.push({ el: this.track, type: "scrollend", handler });
+  }
 
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting || entry.intersectionRatio < 0.6) return;
-          const index = this.slides.indexOf(entry.target);
-          if (index !== -1) this.setActive(index);
-        });
-      },
-      { root: this.track, threshold: [0.6] },
-    );
-
-    this.slides.forEach((slide) => this.observer.observe(slide));
+  _leftmostIndex() {
+    const scrollLeft = this.track.scrollLeft;
+    let closest = 0;
+    let minDist = Infinity;
+    this.slides.forEach((slide, i) => {
+      const dist = Math.abs(slide.offsetLeft - scrollLeft);
+      if (dist < minDist) {
+        minDist = dist;
+        closest = i;
+      }
+    });
+    return closest;
   }
 
   warmLightbox() {
@@ -95,6 +107,7 @@ class ImageSlider extends HTMLElement {
   goTo(index) {
     const slide = this.slides[index];
     if (!slide) return;
+    this._pendingIndex = index;
     slide.scrollIntoView({
       behavior: "smooth",
       inline: "start",

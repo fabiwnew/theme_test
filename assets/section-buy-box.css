@@ -154,17 +154,16 @@
   background: transparent;
   cursor: pointer;
   opacity: 0.6;
-  transition:
-    border-color 0.15s ease,
-    opacity 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
-.image-slider__thumb:hover {
-  opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  .image-slider__thumb:hover {
+    opacity: 1;
+  }
 }
 
 .image-slider__thumb.is-active {
-  border-color: rgb(var(--color-foreground));
   opacity: 1;
 }
 
@@ -340,15 +339,6 @@
   }
 }
 
-/* 750–989px, non-touch — cap gallery width ---------------- */
-/* On mouse/trackpad devices the gallery doesn't need to be full-bleed,
-   so we cap it at 600px left-aligned to avoid oversized square images. */
-@media screen and (min-width: 750px) and (max-width: 989px) and (pointer: fine) {
-  .image-slider {
-    max-width: 600px;
-  }
-}
-
 /* ≤749px, touch — swipe peek effect ----------------------- */
 /*
   Applies to touch phones up to 749px. pointer: coarse = touch input.
@@ -380,13 +370,13 @@
   }
 }
 
-/* 750–989px, touch — two slides visible ------------------- */
+/* 750–989px — two slides visible -------------------------- */
 /*
-  Touch tablets (iPad, large Android) show 2 slides simultaneously.
+  All devices show 2 slides simultaneously.
   gap: 0.5rem on the track; each slide = calc(50% - 0.25rem) so that
   2 slides + 1 gap = 100%: 2×(50% − 0.25rem) + 0.5rem = 100%.
 */
-@media screen and (min-width: 750px) and (max-width: 989px) and (pointer: coarse) {
+@media screen and (min-width: 750px) and (max-width: 989px) {
   .image-slider__track {
     gap: 0.5rem;
   }
