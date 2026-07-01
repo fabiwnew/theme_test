@@ -12,8 +12,7 @@
 {% endcomment %}
 
 {%- liquid
-  assign gallery_product = product | default: product
-  assign media_items = gallery_product.media
+  assign media_items = product.media
 -%}
 
 {%- if media_items.size > 0 -%}
