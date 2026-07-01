@@ -147,8 +147,13 @@ class ImageSlider extends HTMLElement {
           return Promise.reject(err);
         });
     }
-    await this._lightboxReady;
-    this.lightbox.loadAndOpen(index);
+    try {
+      await this._lightboxReady;
+      this.lightbox.loadAndOpen(index);
+    } catch {
+      // Import failed; _lightboxReady was reset to null so the next click
+      // will retry. The gallery remains fully usable without the lightbox.
+    }
   }
 
   loadStyles() {
