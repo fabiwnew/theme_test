@@ -5,6 +5,8 @@
  * attributes so Liquid can resolve the fingerprinted asset URLs.
  */
 class ImageSlider extends HTMLElement {
+  // ─── State ──────────────────────────────────────────────────────────────────
+
   constructor() {
     super();
     this.track = this.querySelector(".image-slider__track");
@@ -12,10 +14,13 @@ class ImageSlider extends HTMLElement {
     this.thumbs = Array.from(this.querySelectorAll(".image-slider__thumb"));
     this.zoomLinks = Array.from(this.querySelectorAll(".image-slider__zoom"));
     this.currentIndex = 0;
+    this.observer = null;
     this.lightbox = null;
     this._lightboxReady = null;
     this._boundListeners = [];
   }
+
+  // ─── Lifecycle ──────────────────────────────────────────────────────────────
 
   connectedCallback() {
     if (!this.track || this.slides.length === 0) return;
@@ -52,8 +57,14 @@ class ImageSlider extends HTMLElement {
     );
     this._boundListeners = [];
     if (this.observer) this.observer.disconnect();
-    if (this.lightbox) this.lightbox.destroy();
+    if (this.lightbox) {
+      this.lightbox.destroy();
+      this.lightbox = null;
+      this._lightboxReady = null;
+    }
   }
+
+  // ─── Initialisierung ────────────────────────────────────────────────────────
 
   observeSlides() {
     if (!("IntersectionObserver" in window)) return;
@@ -70,6 +81,34 @@ class ImageSlider extends HTMLElement {
     );
 
     this.slides.forEach((slide) => this.observer.observe(slide));
+  }
+
+  warmLightbox() {
+    if (!this.dataset.pswpUrl || !("requestIdleCallback" in window)) return;
+    requestIdleCallback(() => {
+      import(this.dataset.pswpUrl).catch(() => {});
+    });
+  }
+
+  // ─── Navigation ─────────────────────────────────────────────────────────────
+
+  goTo(index) {
+    const slide = this.slides[index];
+    if (!slide) return;
+    slide.scrollIntoView({
+      behavior: "smooth",
+      inline: "start",
+      block: "nearest",
+    });
+    this.setActive(index);
+  }
+
+  step(delta) {
+    const next = Math.min(
+      Math.max(this.currentIndex + delta, 0),
+      this.slides.length - 1,
+    );
+    this.goTo(next);
   }
 
   setActive(index) {
@@ -95,40 +134,7 @@ class ImageSlider extends HTMLElement {
         this.currentIndex === this.slides.length - 1 ? "0.3" : "1";
   }
 
-  goTo(index) {
-    const slide = this.slides[index];
-    if (!slide) return;
-    slide.scrollIntoView({
-      behavior: "smooth",
-      inline: "start",
-      block: "nearest",
-    });
-    this.setActive(index);
-  }
-
-  step(delta) {
-    const next = Math.min(
-      Math.max(this.currentIndex + delta, 0),
-      this.slides.length - 1,
-    );
-    this.goTo(next);
-  }
-
-  warmLightbox() {
-    if (!this.dataset.pswpUrl || !("requestIdleCallback" in window)) return;
-    requestIdleCallback(() => {
-      import(this.dataset.pswpUrl).catch(() => {});
-    });
-  }
-
-  buildDataSource() {
-    return this.zoomLinks.map((link) => ({
-      src: link.href,
-      width: Number(link.dataset.pswpWidth) || 0,
-      height: Number(link.dataset.pswpHeight) || 0,
-      alt: link.querySelector("img")?.alt || "",
-    }));
-  }
+  // ─── Lightbox ───────────────────────────────────────────────────────────────
 
   async openLightbox(index) {
     if (!this._lightboxReady) {
@@ -154,6 +160,15 @@ class ImageSlider extends HTMLElement {
       // Import failed; _lightboxReady was reset to null so the next click
       // will retry. The gallery remains fully usable without the lightbox.
     }
+  }
+
+  buildDataSource() {
+    return this.zoomLinks.map((link) => ({
+      src: link.href,
+      width: Number(link.dataset.pswpWidth) || 0,
+      height: Number(link.dataset.pswpHeight) || 0,
+      alt: link.querySelector("img")?.alt || "",
+    }));
   }
 
   loadStyles() {
