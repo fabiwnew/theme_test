@@ -38,12 +38,14 @@
       {%- endif -%}
 
       <div class="buy-box__pricing">
-        {%- if on_sale -%}
-          <s class="buy-box__compare">{{ current_variant.compare_at_price | money }}</s>
-        {%- endif -%}
-        <span class="buy-box__price{% if on_sale %} buy-box__price--sale{% endif %}">
-          {{ current_variant.price | money }}
-        </span>
+        <div class="buy-box__prices">
+          {%- if on_sale -%}
+            <span class="buy-box__compare">{{ current_variant.compare_at_price | money }}</span>
+          {%- endif -%}
+          <span class="buy-box__price{% if on_sale %} buy-box__price--sale{% endif %}">
+            {{ current_variant.price | money }}
+          </span>
+        </div>
         <span class="buy-box__tax">{{ 'products.product.buybox.mwst_label' | t }}</span>
       </div>
 
