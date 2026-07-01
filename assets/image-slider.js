@@ -13,28 +13,32 @@ class ImageSlider extends HTMLElement {
     this.zoomLinks = Array.from(this.querySelectorAll(".image-slider__zoom"));
     this.currentIndex = 0;
     this.lightbox = null;
+    this._lightboxReady = null;
+    this._boundListeners = [];
   }
 
   connectedCallback() {
     if (!this.track || this.slides.length === 0) return;
 
     this.thumbs.forEach((thumb) => {
-      thumb.addEventListener("click", () =>
-        this.goTo(Number(thumb.dataset.index)),
-      );
+      const handler = () => this.goTo(Number(thumb.dataset.index));
+      thumb.addEventListener("click", handler);
+      this._boundListeners.push({ el: thumb, type: "click", handler });
     });
 
     this.querySelectorAll("[data-dir]").forEach((button) => {
-      button.addEventListener("click", () => {
-        this.step(button.dataset.dir === "next" ? 1 : -1);
-      });
+      const handler = () => this.step(button.dataset.dir === "next" ? 1 : -1);
+      button.addEventListener("click", handler);
+      this._boundListeners.push({ el: button, type: "click", handler });
     });
 
     this.zoomLinks.forEach((link) => {
-      link.addEventListener("click", (event) => {
+      const handler = (event) => {
         event.preventDefault();
         this.openLightbox(Number(link.dataset.index));
-      });
+      };
+      link.addEventListener("click", handler);
+      this._boundListeners.push({ el: link, type: "click", handler });
     });
 
     this.observeSlides();
@@ -43,6 +47,10 @@ class ImageSlider extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this._boundListeners.forEach(({ el, type, handler }) =>
+      el.removeEventListener(type, handler),
+    );
+    this._boundListeners = [];
     if (this.observer) this.observer.disconnect();
     if (this.lightbox) this.lightbox.destroy();
   }
@@ -123,18 +131,23 @@ class ImageSlider extends HTMLElement {
   }
 
   async openLightbox(index) {
-    if (!this.lightbox) {
+    if (!this._lightboxReady) {
       this.loadStyles();
-      const { default: PhotoSwipeLightbox } = await import(
-        this.dataset.pswpUrl
-      );
-      this.lightbox = new PhotoSwipeLightbox({
-        dataSource: this.buildDataSource(),
-        pswpModule: () => import(this.dataset.pswpCoreUrl),
-        bgOpacity: 0.9,
-      });
-      this.lightbox.init();
+      this._lightboxReady = import(this.dataset.pswpUrl)
+        .then(({ default: PhotoSwipeLightbox }) => {
+          this.lightbox = new PhotoSwipeLightbox({
+            dataSource: this.buildDataSource(),
+            pswpModule: () => import(this.dataset.pswpCoreUrl),
+            bgOpacity: 0.9,
+          });
+          this.lightbox.init();
+        })
+        .catch((err) => {
+          this._lightboxReady = null;
+          return Promise.reject(err);
+        });
     }
+    await this._lightboxReady;
     this.lightbox.loadAndOpen(index);
   }
 
