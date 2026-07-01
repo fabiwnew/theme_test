@@ -67,15 +67,8 @@ class ImageSlider extends HTMLElement {
 
   attachScrollSync() {
     const handler = () => {
-      const leftmost = this._leftmostIndex();
-      if (this._pendingIndex !== null && this._pendingIndex >= leftmost) {
-        const i = this._pendingIndex;
-        this._pendingIndex = null;
-        this.setActive(i);
-        return;
-      }
       this._pendingIndex = null;
-      this.setActive(leftmost);
+      this.setActive(this._leftmostIndex());
     };
     this.track.addEventListener("scrollend", handler, { passive: true });
     this._boundListeners.push({ el: this.track, type: "scrollend", handler });
@@ -168,7 +161,7 @@ class ImageSlider extends HTMLElement {
     }
     try {
       await this._lightboxReady;
-      this.lightbox.loadAndOpen(index);
+      this.lightbox?.loadAndOpen(index);
     } catch {
       // Import failed; _lightboxReady was reset to null so the next click
       // will retry. The gallery remains fully usable without the lightbox.
