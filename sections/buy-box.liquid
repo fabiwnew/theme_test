@@ -42,7 +42,7 @@
           {%- if on_sale -%}
             <span class="buy-box__compare">{{ current_variant.compare_at_price | money }}</span>
           {%- endif -%}
-          <span class="buy-box__price{% if on_sale %} buy-box__price--sale{% endif %}">
+          <span class="buy-box__price">
             {{ current_variant.price | money }}
           </span>
         </div>

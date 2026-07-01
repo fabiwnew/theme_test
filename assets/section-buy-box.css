@@ -227,10 +227,6 @@
   color: #4e724b;
 }
 
-.buy-box__price--sale {
-  color: #4e724b;
-}
-
 .buy-box__tax {
   font-size: 12px;
   color: #8e8983;
@@ -288,7 +284,7 @@
 /*
   Dawn's base.css has `div:empty { display: none }` which hides the
   empty .pswp__bg element entirely. We override display and ensure the
-  background colour is black. PhotoSwipe's own JS (bgOpacity: 0.65)
+  background colour is black. PhotoSwipe's own JS (bgOpacity: 0.9)
   then handles the open/close opacity animation.
 */
 .pswp__bg {
